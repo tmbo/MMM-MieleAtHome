@@ -91,7 +91,7 @@ Module.register("MMM-MieleAtHome", {
 
 	// only called if the module header was configured in module config in config.js
 	getHeader: function() {
-		return "Miele@Home";
+		return "Geräte";
 	},
 
 	// messages received from other modules and the system (NOT from your node helper)

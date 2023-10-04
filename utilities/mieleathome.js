@@ -107,39 +107,49 @@ class mieleathome {
             }
             }
 //    console.log(options);    
-        request(options,function (error, response, body){
-                    //console.log(response.statusCode);
-                    //console.log(body);
-                switch (response.statusCode){
-                    case 200: // OK
-                        //if (!body){return callback(false,JSON.parse(body),null,null);} else {callback(false,null,null,null)};
-                        {
-                            return callback(false, JSON.parse(body), null, null)
-                        };
-                        break;
-                    case 202: //Accepted, processing has not been completed.
-                        break;
-                    case 204: // OK, No Content
-                        return callback(false,null,null,null);
-                        break;
-                    case 400: //Bad Request, message body will contain more information
-                        return callback(true,null,null,null);
-                        break;
-                    case 401: //Unauthorized
-                        this.NRefreshToken(Token,Refresh_Token,function(err,access_token,refresh_token){
-                                    if(!err){
-                                    this.NSendRequest(Refresh_Token,Endpoint,Method,acsess_token,Send_Body,function(err,data){
-                                                        if(!err){return callback(false,data,access_token,refresh_token)}
-                                                        else{return callback(true,null,access_token,refresh_token)}
-                                                        });
-                                    }
-                                    else{return callback(true,null,null,null);}
-                                    });
-                        break;
-                    default:
-                        return callback(true,null,null,null);
-                    }
+        request(options,function (error, response, body) {
+          //console.log(response.statusCode);
+          //console.log(body);
+          if (response) {
+            switch (response.statusCode) {
+              case 200: // OK
+                //if (!body){return callback(false,JSON.parse(body),null,null);} else {callback(false,null,null,null)};
+              {
+                return callback(false, JSON.parse(body), null, null)
+              }
+                ;
+                break;
+              case 202: //Accepted, processing has not been completed.
+                break;
+              case 204: // OK, No Content
+                return callback(false, null, null, null);
+                break;
+              case 400: //Bad Request, message body will contain more information
+                return callback(true, null, null, null);
+                break;
+              case 401: //Unauthorized
+                this.NRefreshToken(Token, Refresh_Token, function (err, access_token, refresh_token) {
+                  if (!err) {
+                    this.NSendRequest(Refresh_Token, Endpoint, Method, acsess_token, Send_Body, function (err, data) {
+                      if (!err) {
+                        return callback(false, data, access_token, refresh_token)
+                      } else {
+                        return callback(true, null, access_token, refresh_token)
+                      }
+                    });
+                  } else {
+                    return callback(true, null, null, null);
+                  }
                 });
+                break;
+              default:
+                return callback(true, null, null, null);
+            }
+          } else {
+            return callback(false, null, null, null);
+          }
+          ;
+        });
     }
     NGetDevices(callback){
         this.NSendRequest(mieletoken.refresh_token,'v1/devices/','GET',mieletoken.access_token,'',function(err,data){
